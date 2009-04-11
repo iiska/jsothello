@@ -40,12 +40,64 @@
             if (row) {
                 return row.innerHTML.charAt(2*x+1);
             }
+        },
+
+        getRow: function(y) {
+            var row = Ext.DomQuery.selectNode('p.row'+y, this.dom);
+            if (row) {
+                return row.innerHTML;
+            }
         }
     });
 
     var OthelloGame = function(board) {
         return {
             board: board,
+
+            getInterestingArea: function() {
+                var r, i;
+                var x1=-1; var y1;
+                var x2; var y2=8;
+
+                for (i=0;i<8;++i) {
+                    r = this.board.getRow(i);
+                    if ( !y1 && r.match(/[○●]/) ) {
+                        y1 = i;
+                    } else if ( (y1 >= 0) && !r.match(/[○●]/) ) {
+                        y2 = i;
+                        break;
+                    }
+                }
+
+                if (!y1) { y1 = 0; }
+
+                for (i=y1;i<y2;++i) {
+                    r = this.board.getRow(i);
+                    for (var j=0,jl=r.length;j<jl;++j) {
+                        var c = r.charAt(j);
+                        if ( (c === '○') || (c === '●') ) {
+                            if (x1 === -1) {
+                                x1 = (j-1) / 2;
+                            } else if (x1 > ((j-1) / 2)) {
+                                x1 = (j-1) / 2;
+                            }
+                        }
+                    }
+                    for (var j=r.length;(j--)>0;) {
+                        var c = r.charAt(j);
+                        if ( (c === '○') || (c === '●') ) {
+                            if (!x2) {
+                                x2 = ((j-1) / 2)+1;
+                            } else if (((j-1) / 2)+1 > x2) {
+                                x2 = ((j-1) / 2)+1;
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                return [x1, y1, x2, y2];
+            },
 
             getPossibleMoves: function() {
             }
@@ -55,6 +107,8 @@
 
     Ext.onReady(function() {
         var game = new OthelloGame(new Ext.iiska.OthelloBoard("board"));
+        var area = game.getInterestingArea();
+        alert(area);
     });
     // ]]>
     </script>
