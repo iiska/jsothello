@@ -2,10 +2,39 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
   <head>
     <title>Othello</title>
+    <script type="text/javascript" src="ext-core-debug.js"></script>
     <script type="text/javascript">
     // <![CDATA[
+    Ext.namespace('Ext.iiska');
+
+    Ext.iiska.OthelloBoard = function(element, forceNew) {
+        Ext.iiska.OthelloBoard.superclass.constructor.call(this, element, forceNew);
+
+        var dh = Ext.DomHelper;
+        dh.overwrite(this, {tag:'p', cls:'border', html:'╔═╤═╤═╤═╤═╤═╤═╤═╗'});
+        for(var i=0;i<8;++i) {
+            if (i > 0) {
+                dh.append(this, {tag:'p', cls:'border', html:'╟─┼─┼─┼─┼─┼─┼─┼─╢'});
+            }
+            dh.append(this, {tag:'p', cls:'row', html:'║ │ │ │ │ │ │ │ ║'});
+        }
+        dh.append(this, {tag:'p', cls:'border', html:'╚═╧═╧═╧═╧═╧═╧═╧═╝'});
+    };
+
+    Ext.extend(Ext.iiska.OthelloBoard, Ext.Element, {
+    });
+
+    Ext.onReady(function() {
+        var board = new Ext.iiska.OthelloBoard("board");
+    });
     // ]]>
     </script>
+    <style type="text/css">
+    #board {
+        font-family: monospace;
+        line-height: 0;
+    }
+    </style>
   </head>
   <body>
     <h1>Othello</h1>
