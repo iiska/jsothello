@@ -16,16 +16,37 @@
             if (i > 0) {
                 dh.append(this, {tag:'p', cls:'border', html:'╟─┼─┼─┼─┼─┼─┼─┼─╢'});
             }
-            dh.append(this, {tag:'p', cls:'row', html:'║ │ │ │ │ │ │ │ ║'});
+            dh.append(this, {tag:'p', cls:'row row'+i, html:'║ │ │ │ │ │ │ │ ║'});
         }
         dh.append(this, {tag:'p', cls:'border', html:'╚═╧═╧═╧═╧═╧═╧═╧═╝'});
+
+        this.setMove(3,3,'○');
+        this.setMove(3,4,'●');
+        this.setMove(4,3,'●');
+        this.setMove(4,4,'○');
     };
 
     Ext.extend(Ext.iiska.OthelloBoard, Ext.Element, {
+        setMove: function(x, y, piece) {
+            var dq = Ext.DomQuery;
+            var row = dq.selectNode('p.row'+y, this.dom);
+            row.innerHTML = row.innerHTML.substring(0,2*x+1) + piece +
+                row.innerHTML.substring(2*x+2);
+        }
     });
 
+    var OthelloGame = function(board) {
+        return {
+            board: board,
+
+            getPossibleMoves: function() {
+            }
+        };
+    };
+
+
     Ext.onReady(function() {
-        var board = new Ext.iiska.OthelloBoard("board");
+        var game = new OthelloGame(new Ext.iiska.OthelloBoard("board"));
     });
     // ]]>
     </script>
