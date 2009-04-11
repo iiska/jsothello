@@ -28,10 +28,18 @@
 
     Ext.extend(Ext.iiska.OthelloBoard, Ext.Element, {
         setMove: function(x, y, piece) {
-            var dq = Ext.DomQuery;
-            var row = dq.selectNode('p.row'+y, this.dom);
-            row.innerHTML = row.innerHTML.substring(0,2*x+1) + piece +
-                row.innerHTML.substring(2*x+2);
+            var row = Ext.DomQuery.selectNode('p.row'+y, this.dom);
+            if (row) {
+                row.innerHTML = row.innerHTML.substring(0,2*x+1) + piece +
+                    row.innerHTML.substring(2*x+2);
+            }
+        },
+
+        getMove: function(x, y) {
+            var row = Ext.DomQuery.selectNode('p.row'+y, this.dom);
+            if (row) {
+                return row.innerHTML.charAt(2*x+1);
+            }
         }
     });
 
