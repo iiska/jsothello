@@ -76,13 +76,15 @@
         var rows = Ext.DomQuery.select("p.row", board.dom);
         Ext.each(rows, function(i) {
             Ext.fly(i).on("click", function(event, node) {
-                var y = node.className.match(/([0-9]+)/)[1];
+                var y = parseInt(node.className.match(/([0-9]+)/)[1],10);
                 // Depends heavily on font-size, but using
                 // single string without span elements makes the
                 // DOM a lot lighter.
-                var x = Math.floor((event.browserEvent.layerX-14) / 14);
+                var x = Math.floor((event.browserEvent.layerX-
+                                    node.offsetLeft) / 14);
+                if (x<0) {x=0;}
+                else if (x>7) {x=7;}
                 board.setMove(x,y,'o');
-                console.log("x: " + x + ", y: " + y);
             }, this);
         }, this);
 
