@@ -27,19 +27,6 @@
         this.setMove(3,4,'●');
         this.setMove(4,3,'●');
         this.setMove(4,4,'○');
-
-
-        var rows = Ext.DomQuery.select("p.row", this.dom);
-        Ext.each(rows, function(i) {
-            Ext.fly(i).on("click", function(event, node) {
-                var y = node.className.match(/([0-9]+)/)[1];
-                // Depends heavily on font-size, but using
-                // single string without span elements makes the
-                // DOM a lot lighter.
-                var x = Math.floor((event.browserEvent.layerX-14) / 14);
-                this.setMove(x,y,'o');
-            }, this);
-        }, this);
     };
 
     Ext.extend(Ext.iiska.OthelloBoard, Ext.Element, {
@@ -83,10 +70,25 @@
 
     Othello.Game = function(config) {
         var currentPlayer;
+        var board = config.board;
+        var logEl = config.logEl;
+
+        var rows = Ext.DomQuery.select("p.row", board.dom);
+        Ext.each(rows, function(i) {
+            Ext.fly(i).on("click", function(event, node) {
+                var y = node.className.match(/([0-9]+)/)[1];
+                // Depends heavily on font-size, but using
+                // single string without span elements makes the
+                // DOM a lot lighter.
+                var x = Math.floor((event.browserEvent.layerX-14) / 14);
+                board.setMove(x,y,'o');
+                console.log("x: " + x + ", y: " + y);
+            }, this);
+        }, this);
 
         return {
-            board: config.board,
-            logDiv: config.logDiv,
+            //board: undefined,
+            //logEl: undefined,
 
             getInterestingArea: function() {
                 var r, i;
@@ -94,7 +96,7 @@
                 var x2; var y2=8;
 
                 for (i=0;i<8;++i) {
-                    r = this.board.getRow(i);
+                    r = board.getRow(i);
                     if ( !y1 && r.match(/[○●]/) ) {
                         y1 = i;
                     } else if ( (y1 >= 0) && !r.match(/[○●]/) ) {
@@ -106,7 +108,7 @@
                 if (!y1) { y1 = 0; }
 
                 for (i=y1;i<y2;++i) {
-                    r = this.board.getRow(i);
+                    r = board.getRow(i);
                     for (var j=0,jl=r.length;j<jl;++j) {
                         var c = r.charAt(j);
                         if ( (c === '○') || (c === '●') ) {
@@ -142,7 +144,7 @@
                 var my = piece;
                 var opp = (my === '○') ? '●' : '○';
 
-                if (this.board.getMove(x,y) !== ' ') {
+                if (board.getMove(x,y) !== ' ') {
                     return false;
                 }
 
@@ -155,8 +157,8 @@
             },
 
             log: function(str) {
-                if (this.logDiv) {
-                    Ext.DomHelper.append(this.logDiv, {tag:'p', html:str});
+                if (logEl) {
+                    Ext.DomHelper.append(logEl, {tag:'p', html:str});
                 }
             }
         };
@@ -166,31 +168,52 @@
     Ext.onReady(function() {
         var game = new Othello.Game({
             board: new Ext.iiska.OthelloBoard("board"),
-            logDiv: Ext.get('log')
+            logEl: Ext.get('log')
         });
-        var area = game.getInterestingArea();
+        game.log("Alkuun");
     });
     // ]]>
     </script>
     <style type="text/css">
-    #board {
+      h1 {
+        text-align: center;
+      }
+      #main {
+        width: 500px;
+        margin: 0 auto;
+      }
+      #board {
+        margin-top: -0.9em;
+        float: left;
         font-family: monospace;
         line-height: 0;
         font-size: 12px; /* if this is altered change the value
                           * for x-coordinate calculation in click
                           * event handler also. */
-    }
-    div.score {
+      }
+      div.score {
         color: #fff;
         background: #000;
-    }
+      }
+      div#log {
+        font-family: sans-serif;
+        margin: 1em 0 0 8em;
+        border: inset 3px #666;
+        height: 12em;
+        text-overflow: auto;
+      }
+      #log p {
+        margin: 0;
+      }
     </style>
   </head>
   <body>
     <h1>Othello</h1>
-    <div id="board">
-    </div>
-    <div id="log">
+    <div id="main">
+      <div id="board">
+      </div>
+      <div id="log">
+      </div>
     </div>
   </body>
 </html>
