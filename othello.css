@@ -37,10 +37,11 @@ p.score {
 }
 div#log {
     font-family: sans-serif;
-    margin: 0 0 0 11em;
+    font-size: 12px;
+    margin: 0 0 0 15em;
     border: inset 3px #666;
-    height: 15.7em;
-    text-overflow: auto;
+    height: 21em;
+    overflow: auto;
     background: #fff;
     padding: 3px;
 }
