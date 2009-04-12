@@ -1,0 +1,49 @@
+h1 {
+    text-align: center;
+    font-family: sans-serif;
+}
+#main {
+    width: 500px;
+    margin: 0 auto;
+    background: #ff9;
+    padding: 1em;
+    border: outset 4px #600;
+}
+#board {
+    float: left;
+    font-family: monospace;
+    line-height: 0;
+    font-size: 12px; /* if this is altered change the value
+                      * for x-coordinate calculation in click
+                      * event handler also. */
+    border: 1px solid #000;
+    background: #060;
+}
+#board div.grid {
+    margin: 1em 1.5em 1em 1.5em;
+    background: #fff;
+    border: 1px solid #fff;
+}
+div.score {
+    color: #fff;
+    background: #000;
+    line-height: 1em;
+    padding: 3px;
+    margin: 0;
+    text-align: center;
+}
+p.score {
+    margin: 0;
+}
+div#log {
+    font-family: sans-serif;
+    margin: 0 0 0 11em;
+    border: inset 3px #666;
+    height: 15.7em;
+    text-overflow: auto;
+    background: #fff;
+    padding: 3px;
+}
+#log p {
+    margin: 0;
+}
