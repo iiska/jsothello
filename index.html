@@ -19,11 +19,27 @@
             dh.append(this, {tag:'p', cls:'row row'+i, html:'║ │ │ │ │ │ │ │ ║'});
         }
         dh.append(this, {tag:'p', cls:'border', html:'╚═╧═╧═╧═╧═╧═╧═╧═╝'});
+        dh.append(this, {tag:'div', cls:'score', cn: [
+            {tag:'p', cls:'score', html:'White: 2, Black: 2'}
+        ]});
 
         this.setMove(3,3,'○');
         this.setMove(3,4,'●');
         this.setMove(4,3,'●');
         this.setMove(4,4,'○');
+
+
+        var rows = Ext.DomQuery.select("p.row", this.dom);
+        Ext.each(rows, function(i) {
+            Ext.fly(i).on("click", function(event, node) {
+                var y = node.className.match(/([0-9]+)/)[1];
+                // Depends heavily on font-size, but using
+                // single string without span elements makes the
+                // DOM a lot lighter.
+                var x = Math.floor((event.browserEvent.layerX-14) / 14);
+                this.setMove(x,y,'o');
+            }, this);
+        }, this);
     };
 
     Ext.extend(Ext.iiska.OthelloBoard, Ext.Element, {
@@ -50,9 +66,10 @@
         }
     });
 
-    var OthelloGame = function(board) {
+var OthelloGame = function(board,logDiv) {
         return {
             board: board,
+            logDiv: logDiv,
 
             getInterestingArea: function() {
                 var r, i;
@@ -104,16 +121,35 @@
                 return [x1, y1, x2, y2];
             },
 
+            isLegalMove: function(x, y, piece) {
+                var my = piece;
+                var opp = (my === '○') ? '●' : '○';
+
+                if (this.board.getMove(x,y) !== ' ') {
+                    return false;
+                }
+
+                function next() {
+                }
+            },
+
             getPossibleMoves: function() {
+                var area = this.getInterestingArea();
+            },
+
+            log: function(str) {
+                if (this.logDiv) {
+                    Ext.DomHelper.append(this.logDiv, {tag:'p', html:str});
+                }
             }
         };
     };
 
 
     Ext.onReady(function() {
-        var game = new OthelloGame(new Ext.iiska.OthelloBoard("board"));
+        var game = new OthelloGame(new Ext.iiska.OthelloBoard("board"),
+            Ext.get('board'));
         var area = game.getInterestingArea();
-        alert(area);
     });
     // ]]>
     </script>
@@ -121,12 +157,21 @@
     #board {
         font-family: monospace;
         line-height: 0;
+        font-size: 12px; /* if this is altered change the value
+                          * for x-coordinate calculation in click
+                          * event handler also. */
+    }
+    div.score {
+        color: #fff;
+        background: #000;
     }
     </style>
   </head>
   <body>
     <h1>Othello</h1>
     <div id="board">
+    </div>
+    <div id="log">
     </div>
   </body>
 </html>
