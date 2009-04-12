@@ -92,7 +92,8 @@ Ext.extend(Ext.iiska.OthelloBoard, Ext.Element, {
 
     updateScore: function(score) {
         var s = Ext.DomQuery.selectNode("p.score", this.dom);
-        s.innerHTML = "White: " + score.white + ", Black: " + score.black;
+        s.innerHTML = String.format("White: {0}, Black: {1}",
+                                    score.white, score.black);
     }
 });
 
@@ -218,9 +219,7 @@ Othello.Game.prototype = {
                     white: this.players[0].score,
                     black: this.players[1].score
                 });
-                this.log("Player with " +
-                         this.currentPlayer.piece +
-                         " pieces, make your move.");
+                this.log(String.format("Player with {0} pieces, make your move.", this.currentPlayer.piece));
             }
         },
 
@@ -229,8 +228,13 @@ Othello.Game.prototype = {
         },
 
         log: function(str) {
+            var d = new Date();
             if (this.logEl) {
-                Ext.DomHelper.append(this.logEl, {tag:'p', html:str});
+                Ext.DomHelper.append(this.logEl, {tag:'p', cn: [
+                    {tag:'span', cls:'time', html:
+                     String.format("[{0}] ", d.toLocaleTimeString())},
+                     {tag:'span', html: str}
+                ]});
             }
         }
     };

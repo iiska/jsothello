@@ -48,3 +48,7 @@ div#log {
 #log p {
     margin: 0;
 }
+
+#log p span.time {
+    color: #00f;
+}
