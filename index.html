@@ -66,10 +66,27 @@
         }
     });
 
-var OthelloGame = function(board,logDiv) {
+    Ext.namespace("Othello");
+    Othello.Player = function() {
+        return {};
+    };
+
+    Othello.HumanPlayer = function() {
+        Othello.HumanPlayer.superclass.constructor.call(this);
+    };
+    Ext.extend(Othello.HumanPlayer, Othello.Player, {});
+
+    Othello.AIWrapper = function() {
+        Othello.AIWrapper.superclass.constructor.call(this);
+    };
+    Ext.extend(Othello.AIWrapper, Othello.Player, {});
+
+    Othello.Game = function(config) {
+        var currentPlayer;
+
         return {
-            board: board,
-            logDiv: logDiv,
+            board: config.board,
+            logDiv: config.logDiv,
 
             getInterestingArea: function() {
                 var r, i;
@@ -147,8 +164,10 @@ var OthelloGame = function(board,logDiv) {
 
 
     Ext.onReady(function() {
-        var game = new OthelloGame(new Ext.iiska.OthelloBoard("board"),
-            Ext.get('board'));
+        var game = new Othello.Game({
+            board: new Ext.iiska.OthelloBoard("board"),
+            logDiv: Ext.get('log')
+        });
         var area = game.getInterestingArea();
     });
     // ]]>
