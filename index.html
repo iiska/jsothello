@@ -11,14 +11,15 @@
         Ext.iiska.OthelloBoard.superclass.constructor.call(this, element, forceNew);
 
         var dh = Ext.DomHelper;
-        dh.overwrite(this, {tag:'p', cls:'border', html:'╔═╤═╤═╤═╤═╤═╤═╤═╗'});
+        this.gridEl = dh.overwrite(this, {tag:'div', cls:'grid'}, true);
+        dh.append(this.gridEl, {tag:'p', cls:'border', html:'╔═╤═╤═╤═╤═╤═╤═╤═╗'});
         for(var i=0;i<8;++i) {
             if (i > 0) {
-                dh.append(this, {tag:'p', cls:'border', html:'╟─┼─┼─┼─┼─┼─┼─┼─╢'});
+                dh.append(this.gridEl, {tag:'p', cls:'border', html:'╟─┼─┼─┼─┼─┼─┼─┼─╢'});
             }
-            dh.append(this, {tag:'p', cls:'row row'+i, html:'║ │ │ │ │ │ │ │ ║'});
+            dh.append(this.gridEl, {tag:'p', cls:'row row'+i, html:'║ │ │ │ │ │ │ │ ║'});
         }
-        dh.append(this, {tag:'p', cls:'border', html:'╚═╧═╧═╧═╧═╧═╧═╧═╝'});
+        dh.append(this.gridEl, {tag:'p', cls:'border', html:'╚═╧═╧═╧═╧═╧═╧═╧═╝'});
         dh.append(this, {tag:'div', cls:'score', cn: [
             {tag:'p', cls:'score', html:'White: 2, Black: 2'}
         ]});
@@ -30,6 +31,8 @@
     };
 
     Ext.extend(Ext.iiska.OthelloBoard, Ext.Element, {
+        gridEl: undefined,
+
         setMove: function(x, y, piece) {
             var row = Ext.DomQuery.selectNode('p.row'+y, this.dom);
             if (row) {
@@ -185,23 +188,36 @@
         margin: 0 auto;
       }
       #board {
-        margin-top: -0.9em;
         float: left;
         font-family: monospace;
         line-height: 0;
         font-size: 12px; /* if this is altered change the value
                           * for x-coordinate calculation in click
                           * event handler also. */
+        border: 1px solid #000;
+        background: #060;
+      }
+      #board div.grid {
+        margin: 1em 1.5em 1em 1.5em;
+        background: #fff;
+        border: 1px solid #fff;
       }
       div.score {
         color: #fff;
         background: #000;
+        line-height: 1em;
+        padding: 3px;
+        margin: 0;
+        text-align: center;
+      }
+      p.score {
+        margin: 0;
       }
       div#log {
         font-family: sans-serif;
-        margin: 1em 0 0 8em;
+        margin: 1em 0 0 11em;
         border: inset 3px #666;
-        height: 12em;
+        height: 16em;
         text-overflow: auto;
       }
       #log p {
